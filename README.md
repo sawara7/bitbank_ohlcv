@@ -1,0 +1,2 @@
+# bitbank_ohlcv
+ブラウザからbitbankのohlcvデータをダウンロードする
