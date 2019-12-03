@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <v-alert :value="showAlert" :type="alertType">{{ message }}</v-alert>
     <v-layout text-center wrap>
       <v-flex xs12>
         Bitbank ohlcv
@@ -36,17 +37,35 @@ export default {
     candleType         : bb.CANDLETYPE,
     selectedPair       : bb.PAIRS[0],
     selectedCandleType : bb.CANDLETYPE[0],
-    selectedDates      : []
+    selectedDates      : [],
+    showAlert          : false,
+    alertType          : "info",
+    message            : "message"
   }),
   methods: {
-    download :async (pair, candleType, dates) => {
-      let res = await bb.GetOHLCV(pair, candleType, dates);
-      let output = stringify(res);
-      let blob = new Blob([output], { type: 'text/csv' })
-      let link = document.createElement('a')
-      link.href = window.URL.createObjectURL(blob)
-      link.download = 'Result.csv'
-      link.click()
+    async download(pair, candleType, dates) {
+      let res = [];
+      let msg = "Empty data.";
+      try{
+        res = await bb.GetOHLCV(pair, candleType, dates);
+      }catch(error){
+        msg = error;
+      }
+      if (res.length === 0){
+        this.showAlert = true;
+        this.alertType = "error";
+        this.message = msg;
+      }else{                
+        let output = stringify(res);
+        let blob = new Blob([output], { type: 'text/csv' })
+        let link = document.createElement('a')
+        link.href = window.URL.createObjectURL(blob)
+        link.download = pair + '_' + candleType + '_' + dates[0] + '.csv'
+        link.click()
+        this.showAlert = true;
+        this.alertType = "success";
+        this.message = "Completed.";
+      }
     }
   }
 };

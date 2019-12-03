@@ -1,16 +1,15 @@
 const bitbank = require('node-bitbankcc');
-const env = require('../_settings');
 
 const PAIRS = ["btc_jpy", "xrp_jpy", "ltc_btc", "eth_btc", "mona_jpy", "mona_btc", "bcc_jpy", "bcc_btc"];
 
-const CANDLETYPE = ["1min", "5min"];
+const CANDLETYPE = ["1min", "5min", "15min", "30min", "1hour", "4hour", "8hour", "12hour", "1day", "1week"];
 
 const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
 
 const publicApi =new bitbank.PublicApi({
-    'endPoint': env.URL_BB_PUBLIC,
+    'endPoint' : 'https://public.bitbank.cc',
     'keepAlive': false,
-    'timeout': 60000,
+    'timeout'  : 60000,
 });
 
 const GetOHLCV = async(pair, candleType, dates) => {
