@@ -51,7 +51,7 @@ export default {
       }catch(error){
         msg = error;
       }
-      if (res.length === 0){
+      if (!res.length){
         this.showAlert = true;
         this.alertType = "error";
         this.message = msg;
